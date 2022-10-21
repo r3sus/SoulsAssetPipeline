@@ -14,7 +14,7 @@ namespace SoulsAssetPipeline.Animation
     {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-        public enum AnimationBlendHint : uint
+        public enum AnimationBlendHint : byte //uint
         {
             /// Normal
             NORMAL = 0,
@@ -303,7 +303,8 @@ namespace SoulsAssetPipeline.Animation
                 {
                     //PartitionIndices = new HKArray<HKShort>(hkx, section, this, br, variation);
                     PartitionIndices = new HKArray<HKShort>(hkx, section, this, br, variation);
-                    BlendHint = br.ReadEnum32<AnimationBlendHint>();
+                    BlendHint = br.ReadEnum8<AnimationBlendHint>();
+                    br.Skip(3);
                 }
                 else
                 {
@@ -312,7 +313,8 @@ namespace SoulsAssetPipeline.Animation
                     {
                         br.Position += 12;
                     }
-                    BlendHint = br.ReadEnum32<AnimationBlendHint>();
+                    BlendHint = br.ReadEnum8<AnimationBlendHint>();
+                    br.Skip(3);
                     OriginalSkeletonName = br.ReadShiftJIS();
                     br.Pad(16);
                 }

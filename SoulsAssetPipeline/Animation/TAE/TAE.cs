@@ -211,10 +211,13 @@ namespace SoulsAssetPipeline.Animation
 
             if (Format == TAEFormat.DS1)
             {
-                var subFormat = br.AssertInt16(0, 2);
-                if (subFormat == 0)
-                    Format = TAEFormat.DES;
-                br.AssertInt16(1);
+                var subFormat32 = br.ReadInt32(); 
+                if (!new [] { 0x10002, 0x10000, 0x20001, 0x1 }.Contains(subFormat32))
+                {
+                    throw new System.IO.InvalidDataException("Invalid subFormat32.");
+                }
+                if (subFormat32 == 1)
+                    Format = TAEFormat.DES;                
             }
             else
             {
@@ -273,7 +276,7 @@ namespace SoulsAssetPipeline.Animation
             long skeletonNameOffset = 0;
             long sibNameOffset = 0;
 
-            if (BigEndian)
+            if (BigEndian && Format != TAEFormat.DS1)
             {
                 if (Format != TAEFormat.SOTFS)
                 {
@@ -435,7 +438,7 @@ namespace SoulsAssetPipeline.Animation
                 bw.WriteVarint(0xB0);
 
 
-            if (BigEndian)
+            if (BigEndian && Format != TAEFormat.DS1)
             {
                 if (Format != TAEFormat.SOTFS)
                 {
